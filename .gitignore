@@ -1,6 +1,6 @@
 # Data
 logs/
-model/
+storage/
 data/
 
 # VSCode

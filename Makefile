@@ -35,7 +35,7 @@ clean: style
 # Test
 .PHONY: test
 test:
-    pytest -m "not training"
-    cd tests && great_expectations checkpoint run projects
-    cd tests && great_expectations checkpoint run tags
-    cd tests && great_expectations checkpoint run labeled_projects
+	pytest -m "not training"
+#	cd tests && great_expectations checkpoint run projects
+#	cd tests && great_expectations checkpoint run tags
+#	cd tests && great_expectations checkpoint run labeled_projects
