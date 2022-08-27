@@ -1,8 +1,14 @@
 import json
+import logging
+import logging.config
 import random
+from pathlib import Path
 from typing import Optional
 
 import numpy as np
+from rich.logging import RichHandler
+
+from config import config
 
 
 def load_dict(filepath: str) -> dict:
@@ -14,7 +20,7 @@ def load_dict(filepath: str) -> dict:
     Returns:
         dict: File json insights as a dictionary.
     """
-    with open(filepath, "r") as fp:
+    with open(filepath) as fp:
         d = json.load(fp)
     return d
 
@@ -41,3 +47,17 @@ def set_seeds(seed: int = 42) -> None:
     # Set seeds
     np.random.seed(seed)
     random.seed(seed)
+
+
+def create_logger() -> logging.Logger:
+    """Create logger.
+
+    Returns:
+        logging.Logger: Logger.
+    """
+    logging.config.fileConfig(Path(config.CONFIG_DIR, "logging.config"))
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    logger.handlers[0] = RichHandler(markup=True)  # set rich handler
+    logger = logging.getLogger()
+    return logger
