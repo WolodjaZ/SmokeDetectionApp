@@ -1,11 +1,8 @@
 # config/config.py
-import logging
-import logging.config
 from pathlib import Path
 
 import mlflow
 import pretty_errors  # NOQA: F401 (imported but unused)
-from rich.logging import RichHandler
 
 # Directories
 BASE_DIR = Path(__file__).parent.parent.absolute()
@@ -25,9 +22,8 @@ LOGS_DIR.mkdir(parents=True, exist_ok=True)
 DATA_RAW_NAME = "smoke_detection_iot.csv"
 DATA_REF = "deepcontractor/smoke-detection-dataset"
 DATA_URL = "https://www.kaggle.com/code/stpeteishii/smoke-detection-fastai-with-tabularpandas"
+DATA_PREPROCESS_NAME = "preprocess.csv"
+DATA_PREPROCESS_WITHOUT_OUTLINES_NAME = "preprocess_without_outlines.csv"
 
 # Additional parameters
 mlflow.set_tracking_uri("file://" + str(MODEL_REGISTRY.absolute()))
-logging.config.fileConfig(Path(CONFIG_DIR, "logging.config"))
-logger = logging.getLogger()
-logger.handlers[0] = RichHandler(markup=True)  # set rich handler
