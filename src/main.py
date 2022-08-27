@@ -1,16 +1,16 @@
 # src/main.py
+import os
 import warnings
 from typing import List, Optional
 
 import typer
-from kaggle.api.kaggle_api_extended import (
-    KaggleApi,  # pyright: reportMissingImports=false
-)
+from kaggle.api.kaggle_api_extended import KaggleApi
 
 from config import config
-from config.config import logger
+from src import utils
 
 app = typer.Typer()
+logger = utils.create_logger()
 
 warnings.filterwarnings("ignore")
 
@@ -18,14 +18,16 @@ warnings.filterwarnings("ignore")
 @app.command()
 def download_data() -> None:
     """load data from kaggle."""
-    # Connect to Kaggle API
-    api = KaggleApi()
-    api.authenticate()
+    if not (config.DATA_DIR / config.DATA_RAW_NAME).is_file():
+        # Set Kaggle API to init from file
+        os.environ["KAGGLE_CONFIG_DIR"] = str(config.CONFIG_DIR / config.KAGGLE_FILE)
+        api = KaggleApi()
+        api.authenticate()
 
-    # Load
-    api.dataset_download_files(config.DATA_RAW_NAME, path=config.DATA_DIR, unzip=True)
+        # Load
+        api.dataset_download_files(config.DATASET_REF, path=str(config.DATA_DIR), unzip=True)
 
-    logger.info("✅ Data downloaded!")
+        logger.info("✅ Data downloaded!")
 
 
 @app.command()
