@@ -1,3 +1,4 @@
+great-expectations==0.15.20
 kaggle==1.5.12
 mlflow==1.28.0
 numpy==1.23.2
