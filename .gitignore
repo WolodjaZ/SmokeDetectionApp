@@ -2,8 +2,6 @@
 logs/
 storage/
 data/
-config/secrets.json
-config/kaggle.json
 
 # VSCode
 .vscode/

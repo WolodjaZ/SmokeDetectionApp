@@ -26,5 +26,5 @@ jobs:
     -   name: Install dependencies
         run: |
           python -m pip install -e ".[test]" --no-cache-dir
-    -   name: Execute tests
-        run: pytest tests/code --ignore tests/code/test_main.py --ignore tests/code/test_data.py
+#    -   name: Execute tests
+#        run: pytest tests/code --ignore tests/code/test_main.py --ignore tests/code/test_data.py
