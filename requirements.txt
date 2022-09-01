@@ -1,6 +1,8 @@
-great-expectations==0.15.20
 kaggle==1.5.12
 mlflow==1.28.0
 numpy==1.23.2
 pandas==1.4.3
 rich==12.5.1
+dataprep==0.4.5
+imbalanced-learn==0.9.1
+scikit-learn==1.1.2
