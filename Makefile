@@ -43,3 +43,10 @@ test:
 	cd tests && great_expectations checkpoint run raw
 	cd tests && great_expectations checkpoint run preprocess
 	cd tests && great_expectations checkpoint run preprocess_without_outlines
+
+.PHONY: dvc
+dvc:
+	dvc add data/smoke_detection_iot.csv
+	dvc add data/preprocess.csv
+	dvc add data/preprocess_without_outlines.csv
+	dvc push

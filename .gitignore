@@ -1,7 +1,6 @@
 # Data
 logs/
 storage/
-data/
 config/secrets.json
 config/kaggle.json
 
