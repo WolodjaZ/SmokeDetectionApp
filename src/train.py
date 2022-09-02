@@ -37,9 +37,7 @@ def train(
     if args.shuffle:
         df = df.sample(frac=1).reset_index(drop=True)
     df = df[: args.subset]  # None = all samples
-    X_train, X_val, X_test, y_train, y_val, y_test = data.preprocess(
-        df, use_outlines=args.use_outlines, **vars(args)
-    )
+    X_train, X_val, X_test, y_train, y_val, y_test = data.preprocess(df, **vars(args))
     logger.info("✅ Data preprocessed")
 
     # Creating pipeline
@@ -104,7 +102,7 @@ def objective(args: Namespace, df: pd.DataFrame, logger: logging.Logger, trial: 
         float: Loss.
     """
     # Parameters to tune
-    args.var_smoothing = trial.suggest_loguniform("var_smoothing", 1e-5, 1e-12)
+    args.var_smoothing = trial.suggest_loguniform("var_smoothing", 1e-12, 1e-5)
     args.outliers_numb = trial.suggest_int("outliers_numb", 1, 12)
 
     # Train & evaluate
