@@ -28,6 +28,8 @@ def download_data() -> None:
         api.dataset_download_files(config.DATASET_REF, path=str(config.DATA_DIR), unzip=True)
 
         logger.info("✅ Data downloaded!")
+    else:
+        logger.info("✅ Data already downloaded!")
 
 
 @app.command()

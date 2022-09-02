@@ -20,6 +20,7 @@ test_packages = [
     "pytest-cov==3.0.0",
     "pytest-mock==3.8.2",
     "great-expectations==0.15.20",
+    "pretty_errors==1.2.25",
 ]
 
 # Define our package
