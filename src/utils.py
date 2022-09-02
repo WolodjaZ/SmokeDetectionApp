@@ -3,7 +3,7 @@ import logging
 import logging.config
 import random
 from pathlib import Path
-from typing import Optional
+from typing import Dict, Optional
 
 import numpy as np
 from rich.logging import RichHandler
@@ -11,27 +11,27 @@ from rich.logging import RichHandler
 from config import config
 
 
-def load_dict(filepath: str) -> dict:
+def load_dict(filepath: str) -> Dict:
     """Load a dictionary from a JSON's filepath.
 
     Args:
         filepath (str): Path to json file to be loaded.
 
     Returns:
-        dict: File json insights as a dictionary.
+        Dict: File json insights as a dictionary.
     """
     with open(filepath) as fp:
         d = json.load(fp)
     return d
 
 
-def save_dict(d: dict, filepath: str, cls: Optional[dict] = None, sort_keys: bool = False) -> None:
+def save_dict(d: Dict, filepath: str, cls: Optional[Dict] = None, sort_keys: bool = False) -> None:
     """Save a dictionary to a specific location.
 
     Args:
-        d (dict): Data in dictionary to be saved as json.
+        d (Dict): Data in dictionary to be saved as json.
         filepath (str): Path where the json will be saved.
-        cls (Optional[dict], optional): Method to serialize additional types. Defaults to None.
+        cls (Optional[Dict], optional): Method to serialize additional types. Defaults to None.
         sort_keys (bool, optional): Sort dictionary by keys. Defaults to False.
     """
     with open(filepath, "w") as fp:
