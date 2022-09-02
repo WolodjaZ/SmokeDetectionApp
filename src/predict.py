@@ -4,7 +4,7 @@ from typing import List
 import numpy as np
 
 
-def custom_predict(y_prob: np.ndarray, threshold: float, index: int = 0) -> np.ndarray:
+def custom_predict(y_prob: np.ndarray, threshold: float, index: int) -> np.ndarray:
     """Custom predict function that defaults
     to an index if conditions are not met.
     Args:
