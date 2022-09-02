@@ -1,0 +1,283 @@
+{
+    "data_asset_type": null,
+    "expectation_suite_name": "raw",
+    "expectations": [
+      {
+        "expectation_type": "expect_table_columns_to_match_ordered_list",
+        "kwargs": {
+          "column_list": [
+            "Unnamed: 0",
+            "UTC",
+            "Temperature[C]",
+            "Humidity[%]",
+            "TVOC[ppb]",
+            "eCO2[ppm]",
+            "Raw H2",
+            "Raw Ethanol",
+            "Pressure[hPa]",
+            "PM1.0",
+            "PM2.5",
+            "NC0.5",
+            "NC1.0",
+            "NC2.5",
+            "CNT",
+            "Fire Alarm"
+          ]
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_compound_columns_to_be_unique",
+        "kwargs": {
+          "column_list": [
+            "Unnamed: 0",
+            "UTC"
+          ]
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_unique",
+        "kwargs": {
+          "column": "Unnamed: 0"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_unique",
+        "kwargs": {
+          "column": "UTC"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "column": "UTC",
+          "type_": "int"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "Temperature[C]"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "column": "Temperature[C]",
+          "type_": "float"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "Humidity[%]"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "column": "Humidity[%]",
+          "type_": "float"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "TVOC[ppb]"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "column": "TVOC[ppb]",
+          "type_": "int"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "eCO2[ppm]"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "column": "eCO2[ppm]",
+          "type_": "int"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "Raw H2"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "column": "Raw H2",
+          "type_": "int"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "Raw Ethanol"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "column": "Raw Ethanol",
+          "type_": "int"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "Pressure[hPa]"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "column": "Pressure[hPa]",
+          "type_": "float"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "PM1.0"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "column": "PM1.0",
+          "type_": "float"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "PM2.5"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "column": "PM2.5",
+          "type_": "float"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "NC0.5"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "column": "NC0.5",
+          "type_": "float"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "NC1.0"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "column": "CNT",
+          "type_": "int"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "NC2.5"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "CNT"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_not_be_null",
+        "kwargs": {
+          "column": "Fire Alarm"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_of_type",
+        "kwargs": {
+          "column": "Fire Alarm",
+          "type_": "int"
+        },
+        "meta": {}
+      },
+      {
+        "expectation_type": "expect_column_values_to_be_in_set",
+        "kwargs": {
+          "column": "Fire Alarm",
+          "value_set": [
+            0,
+            1
+          ]
+        },
+        "meta": {}
+      }
+    ],
+    "ge_cloud_id": null,
+    "meta": {
+      "citations": [
+        {
+          "batch_request": {
+            "data_asset_name": "smoke_detection_iot.csv",
+            "data_connector_name": "default_inferred_data_connector_name",
+            "datasource_name": "local_data",
+            "limit": 1000
+          },
+          "citation_date": "2022-09-01T18:53:27.940008Z",
+          "comment": "Created suite added via CLI"
+        }
+      ],
+      "great_expectations_version": "0.15.20"
+    }
+  }

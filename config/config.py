@@ -19,9 +19,11 @@ MODEL_REGISTRY.mkdir(parents=True, exist_ok=True)
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 # Assets
-DATA_RAW_NAME = "smoke_detection_iot.csv"
-DATA_REF = "deepcontractor/smoke-detection-dataset"
+KAGGLE_FILE = "kaggle.json"
+SECRETS = "secrets.json"
+DATASET_REF = "deepcontractor/smoke-detection-dataset"
 DATA_URL = "https://www.kaggle.com/code/stpeteishii/smoke-detection-fastai-with-tabularpandas"
+DATA_RAW_NAME = "smoke_detection_iot.csv"
 DATA_PREPROCESS_NAME = "preprocess.csv"
 DATA_PREPROCESS_WITHOUT_OUTLINES_NAME = "preprocess_without_outlines.csv"
 

@@ -29,3 +29,7 @@ virtual_env = "venv"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
+addopts = "--strict-markers --disable-pytest-warnings"
+markers = [
+    "training: tests that involve training",
+]
