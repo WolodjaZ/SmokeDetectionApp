@@ -20,11 +20,11 @@ def custom_predict(y_prob: np.ndarray, threshold: int, index: int) -> np.ndarray
     return np.array(y_pred)
 
 
-def predict(data, artifacts: dict) -> List[dict]:
-    """Predict tags for input data.
+def predict(input_data: np.ndarray, artifacts: dict) -> List[dict]:
+    """Predict smoke for input data.
 
     Args:
-        data (_type_): _description_
+        input_data (np.ndarray): Array with input data.
         artifacts (dict): Dictionary with artifacts.
 
     Returns:
