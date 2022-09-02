@@ -40,15 +40,21 @@ repos:
         args: [--py36-plus]
 -   repo: local
     hooks:
-        -   id: test
-            name: test
-            entry: make
-            args: ["test"]
-            language: system
-            pass_filenames: false
+#        -   id: test
+#            name: test
+#            entry: make
+#            args: ["test"]
+#            language: system
+#            pass_filenames: false
         -   id: clean
             name: clean
             entry: make
             args: ["clean"]
+            language: system
+            pass_filenames: false
+        -   id: dvc
+            name: dvc
+            entry: make
+            args: ["dvc"]
             language: system
             pass_filenames: false

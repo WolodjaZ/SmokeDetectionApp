@@ -15,12 +15,7 @@ docs_packages = ["mkdocs==1.3.1", "mkdocstrings==0.19.0"]
 style_packages = ["black==22.6.0", "flake8==5.0.4", "isort==5.10.1"]
 
 # Define test requirements
-test_packages = [
-    "pytest==7.1.2",
-    "pytest-cov==3.0.0",
-    "pytest-mock==3.8.2",
-    "great-expectations==0.15.20",
-]
+test_packages = ["pytest==7.1.2", "pytest-cov==3.0.0", "great-expectations==0.15.20"]
 
 # Define our package
 setup(

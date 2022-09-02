@@ -1,0 +1,4 @@
+outs:
+- md5: 4e139bd088226e7c275d66842fc0ce3c
+  size: 5834376
+  path: smoke_detection_iot.csv
