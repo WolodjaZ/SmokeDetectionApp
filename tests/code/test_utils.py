@@ -1,10 +1,18 @@
+import tempfile
+from pathlib import Path
+
 import numpy as np
 
 from src import utils
 
 
 def test_save_and_load_dict():
-    pass
+    with tempfile.TemporaryDirectory() as dp:
+        d = {"hello": "world"}
+        fp = Path(dp, "d.json")
+        utils.save_dict(d=d, filepath=fp)
+        d = utils.load_dict(filepath=fp)
+        assert d["hello"] == "world"
 
 
 def test_set_seed():

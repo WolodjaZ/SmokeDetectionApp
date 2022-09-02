@@ -2,7 +2,7 @@
 from pathlib import Path
 
 import mlflow
-import pretty_errors  # NOQA: F401 (imported but unused)
+import pretty_errors
 
 # Directories
 BASE_DIR = Path(__file__).parent.parent.absolute()
@@ -11,12 +11,14 @@ DATA_DIR = Path(BASE_DIR, "data")
 STORAGE_DIR = Path(BASE_DIR, "storage")
 MODEL_REGISTRY = Path(STORAGE_DIR, "model")
 LOGS_DIR = Path(BASE_DIR, "logs")
+RESULT_DIR = Path(BASE_DIR, "results")
 
 # Create dirs
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 STORAGE_DIR.mkdir(parents=True, exist_ok=True)
 MODEL_REGISTRY.mkdir(parents=True, exist_ok=True)
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
+RESULT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Assets
 KAGGLE_FILE = "kaggle.json"

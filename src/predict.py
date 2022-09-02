@@ -4,7 +4,7 @@ from typing import List
 import numpy as np
 
 
-def custom_predict(y_prob: np.ndarray, threshold: float, index: int) -> np.ndarray:
+def custom_predict(y_prob: np.ndarray, threshold: float, index: int = 0) -> np.ndarray:
     """Custom predict function that defaults
     to an index if conditions are not met.
     Args:
@@ -29,13 +29,11 @@ def predict(input_data: np.ndarray, artifacts: dict) -> List:
         List: Predictions for input.
     """
     y_pred = custom_predict(
-        y_prob=artifacts["model"].predict_proba(input_data),
-        threshold=artifacts["args"].threshold,
-        index=artifacts["label_encoder"].class_to_index["other"],
+        y_prob=artifacts["model"].predict_proba(input_data), threshold=artifacts["args"].threshold
     )
     predictions = [
         {
-            "input_text": input_data[i],
+            "input_data": input_data[i],
             "Smoke_detected": y_pred[i],
         }
         for i in range(len(y_pred))
