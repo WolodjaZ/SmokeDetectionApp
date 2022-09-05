@@ -7,6 +7,7 @@ from argparse import Namespace
 from ast import literal_eval
 from pathlib import Path
 
+import bentoml
 import joblib
 import mlflow
 import numpy as np
@@ -90,6 +91,23 @@ def train_model(
     if not test_run:  # pragma: no cover, actual run
         open(Path(config.CONFIG_DIR, "run_id.txt"), "w").write(run_id)
         utils.save_dict(performance, Path(config.RESULT_DIR, "performance.json"))
+
+        # Save model to BentoML
+        bento_model = bentoml.sklearn.save_model(
+            "smoke_clf_model",
+            artifacts["model"],
+            labels={"Type": "NaiveBayes"},
+            signatures={
+                "predict": {"batchable": True, "batch_dim": 0},
+                "predict_proba": {"batchable": True, "batch_dim": 0},
+            },
+            metadata={
+                "threshold": artifacts["args"].threshold,
+                "performance": performance,
+                "mlflow_run_id": run_id,
+            },
+        )
+        logger.info(f"✅ Model saved {bento_model}")
 
 
 @app.command()
