@@ -6,11 +6,26 @@ from typing import Tuple
 import numpy as np
 import pandas as pd
 import whylogs as why
-from pydantic import BaseModel
 from rich.logging import RichHandler
 from sklearn.model_selection import train_test_split
 
 from config import config
+
+COLUMNS = [
+    "temperature_c",
+    "humidity",
+    "tvoc_ppb",
+    "e_co_2_ppm",
+    "raw_h_2",
+    "raw_ethanol",
+    "pressure_h_pa",
+    "pm_1_0",
+    "pm_2_5",
+    "nc_0_5",
+    "nc_1_0",
+    "nc_2_5",
+    "cnt",
+]
 
 
 def custom_predict(y_prob: np.ndarray, threshold: float, index: int = 0) -> np.ndarray:
@@ -41,14 +56,15 @@ def create_logger() -> logging.Logger:
     return logger
 
 
-def initialize_why_logger():
+def initialize_why_logger(n_attempts: int = 3):
     """Create whylogs logger.
 
+    Args:
+        n_attempts (int, optional): Number of attempts to initialize whylogs session. Defaults to 3.
     Returns:
         Whylogs logger.
     """
     # Initialize session
-    n_attempts = 3
     while n_attempts > 0:
         # Initialize logger
         why_logger = why.logger(mode="rolling", interval=5, when="M", base_name="whylogs-smokeapp")
@@ -76,19 +92,3 @@ def get_data_splits(X: pd.DataFrame, y: np.ndarray, train_size: float = 0.7) -> 
     X_train, X_, y_train, y_ = train_test_split(X, y, train_size=train_size, stratify=y)
     X_val, X_test, y_val, y_test = train_test_split(X_, y_, train_size=0.5, stratify=y_)
     return X_train, X_val, X_test, y_train, y_val, y_test
-
-
-class SmokeFeatures(BaseModel):
-    temperature_c: float
-    humidity: float
-    tvoc_ppb: int
-    e_co_2_ppm: int
-    raw_h_2: int
-    raw_ethanol: int
-    pressure_h_pa: float
-    pm_1_0: float
-    pm_2_5: float
-    nc_0_5: float
-    nc_1_0: float
-    nc_2_5: float
-    cnt: int

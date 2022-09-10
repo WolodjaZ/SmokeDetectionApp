@@ -1,10 +1,10 @@
-from typing import Dict
+from typing import Any, Dict
 
 import bentoml
 import pandas as pd
 from bentoml.io import JSON
 
-from app import utils
+from app import app_utils, schemas
 
 
 def create_api() -> bentoml.Service:
@@ -14,18 +14,25 @@ def create_api() -> bentoml.Service:
         bentoml.Service: Sevice.
     """
     # Default settings
-    logger = utils.create_logger()
-    why_logger = utils.initialize_why_logger()
+    logger = app_utils.create_logger()
+    why_logger = app_utils.initialize_why_logger()
     bento_model = bentoml.sklearn.get("smoke_clf_model:latest")
     smoke_clf_runner = bento_model.to_runner()
 
     # Define application
     svc = bentoml.Service("SmokeAI", runners=[smoke_clf_runner])
-
     logger.info("Ready for inference!")
 
     @svc.api(input=JSON(), output=JSON())
-    def metadata(input):
+    def metadata(input: Any) -> Dict[str, Any]:
+        """Get metadata endpoint.
+
+        Args:
+            input (Any): Input not used.
+
+        Returns:
+            Dict[str, Any]: Metadata.
+        """
         return {
             "name": bento_model.tag.name,
             "version": bento_model.tag.version,
@@ -33,12 +40,20 @@ def create_api() -> bentoml.Service:
             "threshold": bento_model.info.metadata["threshold"],
         }
 
-    @svc.api(input=JSON(pydantic_model=utils.SmokeFeatures), output=JSON())
-    def predict(input_data: utils.SmokeFeatures) -> Dict[str, str]:
+    @svc.api(input=JSON(pydantic_model=schemas.SmokeFeatures), output=JSON())
+    def predict(input_data: schemas.SmokeFeatures) -> Dict[str, str]:
+        """Predict endpoint.
+
+        Args:
+            input_data (schemas.SmokeFeatures): Input data.
+
+        Returns:
+            Dict[str, str]: Prediction.
+        """
         input_df = pd.DataFrame([input_data.dict()])
         why_logger.log(input_df)
         y_prob = smoke_clf_runner.predict_proba.run(input_df.values)
-        y_pred = utils.custom_predict(
+        y_pred = app_utils.custom_predict(
             y_prob=y_prob, threshold=bento_model.info.metadata["threshold"]
         )
         why_logger.log({"class": y_pred[0]})

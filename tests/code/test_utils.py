@@ -1,3 +1,4 @@
+import logging
 import tempfile
 from pathlib import Path
 
@@ -24,3 +25,8 @@ def test_set_seed():
     y = np.random.randn(2, 3)
     assert np.array_equal(a, x)
     assert np.array_equal(b, y)
+
+
+def test_create_logger():
+    logger = utils.create_logger()
+    assert isinstance(logger, logging.Logger)
