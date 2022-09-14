@@ -1,0 +1,11 @@
+service: "api:svc"
+labels:
+   owner: bentoml-team
+   stage: prod
+include:
+- "api.py"
+- "app_utils.py"
+- "schemas.py"
+python:
+  requirements_txt: "./requirements.txt"
+  lock_packages: False

@@ -1,0 +1,21 @@
+# Base image
+FROM python:3.8-slim
+
+# Install dependencies
+WORKDIR /smokeapp
+COPY requirements.txt .
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc build-essential \
+    && rm -rf /var/lib/apt/lists/* \
+    && python -m pip install --upgrade pip setuptools wheel \
+    && python -m pip install -r requirements.txt \
+    && python -m pip install protobuf==3.20.1 --no-cache-dir \
+    && apt-get purge -y --auto-remove gcc build-essential
+
+# Copy
+COPY app_utils.py .
+COPY app_gradio.py .
+COPY schemas.py .
+
+# Start app
+ENTRYPOINT ["python", "app_gradio.py"]

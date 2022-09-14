@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  api:
+    image: "smokeai:f5smgibtw2ah3lg6" # bentoml image
+    ports:
+      - "3000:3000"
+  gradio:
+    build:
+      context: .
+      dockerfile: ./dockerfile_gradio
+    ports:
+      - "3001:3001"
+    depends_on:
+      - api
+    environment:
+      - API_URL=http://api:3000
+  streamlit:
+    build:
+      context: .
+      dockerfile: ./dockerfile_streamlit
+    ports:
+      - "3002:3002"
+    volumes:
+      - "./../data:/data"
+      - "~/bentoml:/root/bentoml"
+    environment:
+      - GRADIO_URL=http://gradio:3001

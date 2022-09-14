@@ -1,45 +1,12 @@
-import argparse
-import json
+import os
 from typing import Any
 
+import app_utils
 import gradio as gr
-import pandas as pd
-import requests
-
-from app import app_utils, schemas
 
 
-def predict(*args: Any, api_url: str) -> str:
-    """Predict function.
-
-    Args:
-        args (Any): Input arguments
-        api_url (str): API url
-
-    Returns:
-        str: Prediction
-    """
-    # Prepare input
-    df = pd.DataFrame([args], columns=app_utils.COLUMNS)
-
-    # Validate input
-    valid_df = schemas.SmokeFeatures(**(df.to_dict(orient="records")[0]))
-
-    # Predict
-    output = requests.post(
-        f"{api_url}/predict",
-        headers={"content-type": "application/json"},
-        data=json.dumps(valid_df.dict()),
-    ).text
-
-    return output["predictions"]
-
-
-def create_app(api_url: str = "http://localhost:3000"):
+def create_app():
     """Create gradio app.
-
-    Args:
-        api_url (str): API url. Defaults to "http://localhost:3000".
 
     Returns:
         Gradio app
@@ -49,8 +16,11 @@ def create_app(api_url: str = "http://localhost:3000"):
     logger = app_utils.create_logger()
     logger.info("Ready for inference!")
 
+    # Get API url
+    api_url = os.getenv("API_URL", "http://localhost:3000")
+
     def gradio_predict(*args: Any) -> str:
-        return predict(*args, api_url=api_url)
+        return app_utils.predict_api(*args, api_url=api_url)
 
     with gr.Blocks() as smokeapp:
         gr.Markdown("**Smoke Detector Classification**")
@@ -121,8 +91,5 @@ def create_app(api_url: str = "http://localhost:3000"):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Create gradio app.")
-    parser.add_argument("--api_url", type=str, default="http://localhost:3000", help="API url")
-    args = parser.parse_args()
-    smokeapp = create_app(args.api_url)
-    smokeapp.launch()
+    smokeapp = create_app()
+    smokeapp.launch(server_name="0.0.0.0", server_port=3001)

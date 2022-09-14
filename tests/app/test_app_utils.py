@@ -1,9 +1,11 @@
 import logging
+from argparse import Namespace
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import pytest
+import requests
 
 from app import app_utils
 from config import config
@@ -29,18 +31,6 @@ def test_create_logger():
     assert isinstance(logger, logging.Logger)
 
 
-def test_initialize_why_logger():
-    logger = app_utils.initialize_why_logger()
-    assert logger is not None
-    logger.close()
-
-
-def test_fail_initialize_why_logger():
-    with pytest.raises(Exception) as excinfo:
-        app_utils.initialize_why_logger(0)
-    assert "Could not initialize whylogs session" in str(excinfo.value)
-
-
 def test_get_data_splits():
     df_path = Path(config.DATA_DIR, config.DATA_PREPROCESS_WITHOUT_OUTLINES_NAME)
     df = pd.read_csv(df_path)
@@ -55,3 +45,14 @@ def test_get_data_splits():
     assert len(X_train) / float(len(df)) == pytest.approx(0.7, abs=0.11)  # 0.7 ± 0.11
     assert len(X_val) / float(len(df)) == pytest.approx(0.15, abs=0.05)  # 0.15 ± 0.05
     assert len(X_test) / float(len(df)) == pytest.approx(0.15, abs=0.05)  # 0.15 ± 0.05
+
+
+def test_predict(mocker):
+    data = [22.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    output_text = "No fire alarm"
+    mocker.patch.object(app_utils, "create_logger", return_value=logging.Logger("test"))
+    mocker.patch.object(
+        requests, "post", return_value=Namespace(**{"text": {"predictions": output_text}})
+    )
+    output = app_utils.predict_api(*data, api_url="test")
+    assert output == output_text
