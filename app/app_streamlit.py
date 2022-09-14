@@ -1,24 +1,22 @@
-import argparse
+import os
 from pathlib import Path
 
+import app_utils
 import bentoml
 import pandas as pd
 import shap
 import streamlit as st
 
-from app import app_utils
-from config import config
-
 st.set_option("deprecation.showPyplotGlobalUse", False)
+DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+DATA_RAW_NAME = Path(DATA_DIR, "smoke_detection_iot.csv")
+DATA_PREPROCESS_WITHOUT_OUTLINES_NAME = Path(DATA_DIR, "preprocess_without_outlines.csv")
 
 
 @st.cache()
 def load_data():
-    projects_fp_raw = Path(config.DATA_DIR, config.DATA_RAW_NAME)
-    df_raw = pd.read_csv(projects_fp_raw)
-
-    projects_fp_fil = Path(config.DATA_DIR, config.DATA_PREPROCESS_WITHOUT_OUTLINES_NAME)
-    df_clear = pd.read_csv(projects_fp_fil)
+    df_raw = pd.read_csv(DATA_RAW_NAME)
+    df_clear = pd.read_csv(DATA_PREPROCESS_WITHOUT_OUTLINES_NAME)
     return df_raw, df_clear
 
 
@@ -36,12 +34,8 @@ def calculate_shap_values(explainer: shap.Explainer, X: pd.DataFrame):
     return explainer(X)
 
 
-def create_app(gradio_url: str = "http://localhost:8760"):
-    """Create streamlit app.
-
-    Args:
-        gradio_url (str, optional): Url of gradio. Defaults to "http://localhost:8760".
-    """
+def create_app():
+    "Create streamlit app."
     # Title
     st.title("SmokeApp · Smoke detection AI")
 
@@ -52,13 +46,12 @@ def create_app(gradio_url: str = "http://localhost:8760"):
         "The data is from the [Kaggle Smoke Detector Dataset](https://www.kaggle.com/andrewmvd/smoke-detection)."
     )
     st.text("Raw data")
-    projects_fp_raw = Path(config.DATA_DIR, config.DATA_RAW_NAME)
+    projects_fp_raw = DATA_RAW_NAME
     df_raw = pd.read_csv(projects_fp_raw)
     st.text(f"Raw projects (count: {len(df_raw)})")
     st.write(df_raw)
     st.text("Filtered data")
-    projects_fp_fil = Path(config.DATA_DIR, config.DATA_PREPROCESS_WITHOUT_OUTLINES_NAME)
-    df_clear = pd.read_csv(projects_fp_fil)
+    df_clear = pd.read_csv(DATA_PREPROCESS_WITHOUT_OUTLINES_NAME)
     st.text(f"Preprocessed projects (count: {len(df_clear)})")
     st.write(df_clear)
 
@@ -98,13 +91,9 @@ def create_app(gradio_url: str = "http://localhost:8760"):
     st.pyplot(shap.summary_plot(shap_values, plot_type="violin", show=False))
 
     # Inference
+    gradio_url = os.getenv("GRADIO_URL", "http://localhost:3001")
     st.header(f"🚀 For Inference we suggest you to visit gradio page {gradio_url}")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Create streamlit app.")
-    parser.add_argument(
-        "--gradio_url", type=str, default="http://localhost:8760", help="Url of gradio app."
-    )
-    args = parser.parse_args()
-    create_app(args.gradio_url)
+    create_app()

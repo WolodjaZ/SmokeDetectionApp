@@ -1,16 +1,21 @@
+import json
 import logging
 import logging.config
+import sys
 from pathlib import Path
-from typing import Tuple
+from typing import Any, Tuple
 
 import numpy as np
 import pandas as pd
-import whylogs as why
+import requests
 from rich.logging import RichHandler
 from sklearn.model_selection import train_test_split
 
-from config import config
+from .schemas import SmokeFeatures
 
+BASE_DIR = Path(__file__).resolve().parent
+LOGS_DIR = Path(BASE_DIR, "logs")
+WHY_LOGS_DIR = Path(LOGS_DIR, "whylogs")
 COLUMNS = [
     "temperature_c",
     "humidity",
@@ -48,36 +53,52 @@ def create_logger() -> logging.Logger:
     Returns:
         logging.Logger: Logger.
     """
-    logging.config.fileConfig(Path(config.CONFIG_DIR, "logging.config"))
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-    logger.handlers[0] = RichHandler(markup=True)  # set rich handler
-    logger = logging.getLogger()
-    return logger
-
-
-def initialize_why_logger(n_attempts: int = 3):
-    """Create whylogs logger.
-
-    Args:
-        n_attempts (int, optional): Number of attempts to initialize whylogs session. Defaults to 3.
-    Returns:
-        Whylogs logger.
-    """
-    # Initialize session
-    while n_attempts > 0:
-        # Initialize logger
-        why_logger = why.logger(mode="rolling", interval=5, when="M", base_name="whylogs-smokeapp")
-        why_logger.append_writer("local", base_dir=str(config.WHY_LOGS_DIR))
-
-        if why_logger is not None:
-            break
-        else:
-            n_attempts -= 1
-    if n_attempts <= 0:
-        raise Exception("Could not initialize whylogs session")
-
-    return why_logger
+    LOGS_DIR.mkdir(parents=True, exist_ok=True)
+    # Logger
+    logging_config = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "minimal": {"format": "%(message)s"},
+            "detailed": {
+                "format": "%(levelname)s %(asctime)s [%(name)s:%(filename)s:%(funcName)s:%(lineno)d]\n%(message)s\n"
+            },
+        },
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "stream": sys.stdout,
+                "formatter": "minimal",
+                "level": logging.DEBUG,
+            },
+            "info": {
+                "class": "logging.handlers.RotatingFileHandler",
+                "filename": Path(LOGS_DIR, "info.log"),
+                "maxBytes": 10485760,  # 1 MB
+                "backupCount": 10,
+                "formatter": "detailed",
+                "level": logging.INFO,
+            },
+            "error": {
+                "class": "logging.handlers.RotatingFileHandler",
+                "filename": Path(LOGS_DIR, "error.log"),
+                "maxBytes": 10485760,  # 1 MB
+                "backupCount": 10,
+                "formatter": "detailed",
+                "level": logging.ERROR,
+            },
+        },
+        "root": {
+            "handlers": ["console", "info", "error"],
+            "level": logging.INFO,
+            "propagate": True,
+        },
+    }
+    logging.config.dictConfig(logging_config)
+    bentoml_logger = logging.getLogger()
+    bentoml_logger.setLevel(logging.INFO)
+    bentoml_logger.handlers[0] = RichHandler(markup=True)  # set rich handler
+    return bentoml_logger
 
 
 def get_data_splits(X: pd.DataFrame, y: np.ndarray, train_size: float = 0.7) -> Tuple:
@@ -92,3 +113,36 @@ def get_data_splits(X: pd.DataFrame, y: np.ndarray, train_size: float = 0.7) -> 
     X_train, X_, y_train, y_ = train_test_split(X, y, train_size=train_size, stratify=y)
     X_val, X_test, y_val, y_test = train_test_split(X_, y_, train_size=0.5, stratify=y_)
     return X_train, X_val, X_test, y_train, y_val, y_test
+
+
+def predict_api(*args: Any, api_url: str) -> str:
+    """Predict function.
+
+    Args:
+        args (Any): Input arguments
+        api_url (str): API url
+
+    Returns:
+        str: Prediction
+    """
+    # Prepare input
+    df = pd.DataFrame([args], columns=COLUMNS)
+
+    # Validate input
+    valid_df = SmokeFeatures(**(df.to_dict(orient="records")[0]))
+
+    # Predict
+    output = requests.post(
+        f"{api_url}/predict",
+        headers={"content-type": "application/json"},
+        data=json.dumps(valid_df.dict()),
+    )
+    # Convert output to dict
+    if isinstance(output.text, dict):
+        output_prediction = output.text
+    elif isinstance(output.text, str):
+        output_prediction = json.loads(output.text)
+    else:
+        Exception("Not a valid output")
+
+    return output_prediction["predictions"]
