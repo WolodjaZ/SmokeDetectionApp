@@ -59,5 +59,4 @@ def create_logger() -> logging.Logger:
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
     logger.handlers[0] = RichHandler(markup=True)  # set rich handler
-    logger = logging.getLogger()
     return logger

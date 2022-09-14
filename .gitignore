@@ -5,7 +5,7 @@ config/secrets.json
 config/kaggle.json
 config/args.json
 config/run_id.txt
-
+app/logs/
 
 # VSCode
 .vscode/

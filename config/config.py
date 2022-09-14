@@ -12,6 +12,7 @@ STORAGE_DIR = Path(BASE_DIR, "storage")
 MODEL_REGISTRY = Path(STORAGE_DIR, "model")
 LOGS_DIR = Path(BASE_DIR, "logs")
 RESULT_DIR = Path(BASE_DIR, "results")
+WHY_LOGS_DIR = Path(STORAGE_DIR, "whylogs")
 
 # Create dirs
 DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -19,6 +20,7 @@ STORAGE_DIR.mkdir(parents=True, exist_ok=True)
 MODEL_REGISTRY.mkdir(parents=True, exist_ok=True)
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
 RESULT_DIR.mkdir(parents=True, exist_ok=True)
+WHY_LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 # Assets
 KAGGLE_FILE = "kaggle.json"
