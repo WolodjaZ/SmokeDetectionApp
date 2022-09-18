@@ -1,9 +1,0 @@
-{
-  "shuffle": true,
-  "subset": null,
-  "use_outlines": false,
-  "var_smoothing": 1.0267565253870397e-09,
-  "outliers_numb": 7,
-  "num_epochs": 1,
-  "threshold": 0.9925634281884104
-}
