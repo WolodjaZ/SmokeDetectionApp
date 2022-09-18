@@ -29,4 +29,4 @@ jobs:
     -   name: Execute tests code
         run: pytest tests/code --ignore tests/code/test_train.py --ignore tests/code/test_optimize.py --ignore tests/code/test_predict.py --ignore tests/code/test_utils.py --ignore tests/code/test_data.py
     -   name: Execute tests app
-        run: pytest tests/app
+        run: pytest tests/app --ignore tests/app/test_app_utils.py
