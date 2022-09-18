@@ -8,6 +8,9 @@ BASE_DIR = Path(__file__).parent
 with open(Path(BASE_DIR, "requirements.txt")) as file:
     required_packages = [ln.strip() for ln in file.readlines()]
 
+# Define build requirements
+build_packages = ["pre-commit==2.20.0", "invoke==1.7.1"]
+
 # Define docs requirements
 docs_packages = ["mkdocs==1.3.1", "mkdocstrings==0.19.0"]
 
@@ -34,7 +37,7 @@ setup(
     packages=find_namespace_packages(),
     install_requires=[required_packages],
     extras_require={
-        "dev": docs_packages + style_packages + test_packages + ["pre-commit==2.20.0"],
+        "dev": docs_packages + style_packages + test_packages + build_packages,
         "docs": docs_packages,
         "test": test_packages,
     },
