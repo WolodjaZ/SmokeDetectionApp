@@ -1,0 +1,33 @@
+defaults:
+  - _self_
+  - dataset: SmokeDefault
+  - model: Naive
+  - override hydra/job_logging: disabled
+  - override hydra/hydra_logging: colorlog
+hydra:
+  run:
+    dir: ${hydra:runtime.cwd}/storage/hydra_output
+secret:
+  kaggle: kaggle.json
+  secrets: secrets.json
+path:
+  base: ${hydra:runtime.cwd}
+  config: ${path.base}/config
+  data: ${path.base}/data
+  storage: ${path.base}/storage
+  model_registry: ${path.storage}/model
+  results: ${path.base}/results
+  log: ${path.base}/logs
+  why_logs: ${path.storage}/whylogs
+test:
+  shuffle: true
+  subset: null
+  use_outlines: false
+  outliers_numb: 7
+  num_epochs: 1
+  threshold: 0.5
+  experiment_name: test_experiment
+  run_name: test
+predict:
+  input: "[20.117000579833984,52.810001373291016,0,400,12448,19155,939.7579956054688,0.0,0.0,0.0,0.0,0.0,8]"
+  run_id: 0e0c0f5d5a9c43baa04ef154acfb3ea7

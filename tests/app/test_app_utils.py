@@ -1,4 +1,7 @@
 import logging
+import os
+import shutil
+import sys
 from argparse import Namespace
 from pathlib import Path
 
@@ -7,8 +10,12 @@ import pandas as pd
 import pytest
 import requests
 
-from app import app_utils
-from config import config
+myDir = os.getcwd() + "/app"
+sys.path.append(myDir)
+
+from app import app_utils  # noqa: E402
+
+DATA = os.path.join(os.getcwd(), "data", "preprocess_without_outlines.csv")
 
 
 @pytest.mark.parametrize(
@@ -29,10 +36,11 @@ def test_custom_predict(threshold, y_pred):
 def test_create_logger():
     logger = app_utils.create_logger()
     assert isinstance(logger, logging.Logger)
+    shutil.rmtree(Path(os.getcwd(), "app", "logs"))
 
 
 def test_get_data_splits():
-    df_path = Path(config.DATA_DIR, config.DATA_PREPROCESS_WITHOUT_OUTLINES_NAME)
+    df_path = Path(DATA)
     df = pd.read_csv(df_path)
 
     X_train, X_val, X_test, y_train, y_val, y_test = app_utils.get_data_splits(

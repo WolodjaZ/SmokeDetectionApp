@@ -5,8 +5,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from config import config
 from src import data
+from src.config import Dataset as DatasetConfig
+from src.config import Model as ModelConfig
+from src.config import Path as PathConfig
+from src.config import SmokeConfig
 
 
 @pytest.fixture()
@@ -186,7 +189,21 @@ def df():
     )
     df = df.astype(int)
     df["Fire Alarm"] = df["Fire Alarm"] - 1
+
     return df
+
+
+@pytest.fixture()
+def Smoke_Config():
+    Smoke_Config = SmokeConfig(
+        model=ModelConfig("", "", False, False, None, False, 1, 0.5, True, 1, 1, {}),
+        dataset=DatasetConfig("", "", "raw", "preprocess", "preprocess_outlines"),
+        secret=None,
+        path=PathConfig("", "", "", "", "", "", "", ""),
+        test=None,
+        predict=None,
+    )
+    return Smoke_Config
 
 
 def test_get_outliers(df):
@@ -202,36 +219,32 @@ def test_get_outliers(df):
         (0),  # uncorrect test
     ],
 )
-def test_cleaning_fail(df, outliers_numb):
+def test_cleaning_fail(df, Smoke_Config, outliers_numb):
+    Smoke_Config.model.outliers_numb = outliers_numb
     with pytest.raises(AssertionError) as excinfo:
-        cleaned_df, cleaned_df_outlines = data.cleaning(df, outliers_numb)
+        cleaned_df, cleaned_df_outlines = data.cleaning(df, Smoke_Config)
     assert "value must be grater then 0" in str(excinfo.value)
 
 
 @pytest.mark.parametrize(
     "outliers_numb",
     [
-        (None),  # optional test
         (1),  # correct without outliers
         (6),  # correct without outliers
         (7),  # correct without one outliers
         (14),  # correct with outliers
     ],
 )
-def test_cleaning(mocker, df, outliers_numb):
+def test_cleaning(df, Smoke_Config, outliers_numb):
+    Smoke_Config.model.outliers_numb = outliers_numb
     with tempfile.TemporaryDirectory() as dp:
         base_path = Path(dp)
-        mocker.patch.object(data.config, "DATA_DIR", base_path)
-        if outliers_numb is None:
-            cleaned_df, cleaned_df_outlines = data.cleaning(df)
-        else:
-            cleaned_df, cleaned_df_outlines = data.cleaning(df, outliers_numb)
+        Smoke_Config.path.data = str(base_path)
+        cleaned_df, cleaned_df_outlines = data.cleaning(df, Smoke_Config)
 
         assert cleaned_df.shape == (df.shape[0], (df.shape[1] - 2))
         assert cleaned_df_outlines.shape[1] == (df.shape[1] - 2)
-        if outliers_numb is None:
-            assert cleaned_df_outlines.shape[0] == (df.shape[0] - 2)
-        elif outliers_numb > 0 and outliers_numb < cleaned_df.shape[1]:
+        if outliers_numb > 0 and outliers_numb < cleaned_df.shape[1]:
             assert cleaned_df_outlines.shape[0] != df.shape[0]
             if outliers_numb < int((df.shape[1] - 2) / 2):
                 assert cleaned_df_outlines.shape[0] == (df.shape[0] - 2)
@@ -243,10 +256,10 @@ def test_cleaning(mocker, df, outliers_numb):
         assert not {"unnamed_0", "utc"}.issubset(cleaned_df.columns)
         assert not {"unnamed_0", "utc"}.issubset(cleaned_df_outlines.columns)
 
-        cleaned_df_read = pd.read_csv(base_path / config.DATA_PREPROCESS_NAME)
+        cleaned_df_read = pd.read_csv(base_path / Smoke_Config.dataset.preprocess)
         assert cleaned_df.eq(cleaned_df_read).all().all()
         cleaned_df_outlines_read = pd.read_csv(
-            base_path / config.DATA_PREPROCESS_WITHOUT_OUTLINES_NAME
+            base_path / Smoke_Config.dataset.preprocess_without_outlines
         )
         assert cleaned_df_outlines.eq(cleaned_df_outlines_read).all().all()
 
@@ -268,23 +281,23 @@ def test_oversample(X, y):
 
 
 @pytest.mark.parametrize(
-    "use_outlines",
+    "oversample",
     [
         (True),  # banalced
         (False),  # banalced
     ],
 )
-def test_get_data_splits(mocker, df, use_outlines):
+def test_get_data_splits(df, Smoke_Config, oversample):
+    Smoke_Config.model.oversample = oversample
     with tempfile.TemporaryDirectory() as dp:
         base_path = Path(dp)
-        mocker.patch.object(data.config, "DATA_DIR", base_path)
+        Smoke_Config.path.data = str(base_path)
 
-        _, cleaned_df_outlines = data.cleaning(df)
-        print(cleaned_df_outlines)
+        _, cleaned_df_outlines = data.cleaning(df, Smoke_Config)
         X_train, X_val, X_test, y_train, y_val, y_test = data.get_data_splits(
             cleaned_df_outlines.drop(columns=["fire_alarm"], axis=1),
             cleaned_df_outlines["fire_alarm"],
-            use_oversample=use_outlines,
+            use_oversample=Smoke_Config.model.oversample,
         )
         assert len(X_train) == len(y_train)
         assert len(X_val) == len(y_val)
@@ -301,37 +314,27 @@ def test_get_data_splits(mocker, df, use_outlines):
 
 
 @pytest.mark.parametrize(
-    "cleaned_exist, cleaned_outliers_exist, ikwargs",
+    "cleaned_exist, cleaned_outliers_exist",
     [
-        (True, True, dict()),  # check if cleaned data exists
-        (True, True, {"oversample": True}),  # check if cleaned data exists with oversample
-        (False, True, dict()),  # check if one of cleaned data don't exists
-        (True, False, dict()),  # check if one of cleaned data don't exists
-        (False, False, dict()),  # check if both cleaned data don't exists
-        (
-            False,
-            False,
-            {"outliers_numb": 4},
-        ),  # check if both cleaned data don't exists and use_outlines is True
+        (True, True),  # check if cleaned data exists
+        (False, True),  # check if one of cleaned data don't exists
+        (True, False),  # check if one of cleaned data don't exists
+        (False, False),  # check if both cleaned data don't exists
     ],
 )
-def test_preprocess(mocker, df, cleaned_exist, cleaned_outliers_exist, ikwargs):
+def test_preprocess(df, Smoke_Config, cleaned_exist, cleaned_outliers_exist):
     with tempfile.TemporaryDirectory() as dp:
         base_path = Path(dp)
-        mocker.patch.object(data.config, "DATA_DIR", base_path)
+        Smoke_Config.path.data = str(base_path)
 
-        if "outliers_numb" in ikwargs:
-            _, _ = data.cleaning(df, ikwargs["outliers_numb"])
-        else:
-            _, _ = data.cleaning(df)
-
+        _, _ = data.cleaning(df, Smoke_Config)
         if not cleaned_exist:
-            (base_path / config.DATA_PREPROCESS_NAME).unlink()
-            assert not (base_path / config.DATA_PREPROCESS_NAME).is_file()
-        if not cleaned_exist:
-            (base_path / config.DATA_PREPROCESS_WITHOUT_OUTLINES_NAME).unlink()
-            assert not (base_path / config.DATA_PREPROCESS_WITHOUT_OUTLINES_NAME).is_file()
+            (base_path / Smoke_Config.dataset.preprocess).unlink()
+            assert not (base_path / Smoke_Config.dataset.preprocess).is_file()
+        if not cleaned_outliers_exist:
+            (base_path / Smoke_Config.dataset.preprocess_without_outlines).unlink()
+            assert not (base_path / Smoke_Config.dataset.preprocess_without_outlines).is_file()
 
-        X_train, X_val, X_test, y_train, y_val, y_test = data.preprocess(df, False, **ikwargs)
-        assert (base_path / config.DATA_PREPROCESS_NAME).is_file()
-        assert (base_path / config.DATA_PREPROCESS_WITHOUT_OUTLINES_NAME).is_file()
+        X_train, X_val, X_test, y_train, y_val, y_test = data.preprocess(df, Smoke_Config)
+        assert (base_path / Smoke_Config.dataset.preprocess).is_file()
+        assert (base_path / Smoke_Config.dataset.preprocess_without_outlines).is_file()

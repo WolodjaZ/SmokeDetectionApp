@@ -15,6 +15,7 @@ RUN apt-get update \
 # Copy
 COPY app_utils.py .
 COPY app_streamlit.py .
+COPY schemas.py .
 RUN python -m pip install streamlit
 
 # Start app

@@ -9,9 +9,8 @@ import numpy as np
 import pandas as pd
 import requests
 from rich.logging import RichHandler
+from schemas import SmokeFeatures
 from sklearn.model_selection import train_test_split
-
-from .schemas import SmokeFeatures
 
 BASE_DIR = Path(__file__).resolve().parent
 LOGS_DIR = Path(BASE_DIR, "logs")

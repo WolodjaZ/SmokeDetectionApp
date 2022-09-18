@@ -1,0 +1,5 @@
+dataset_ref: deepcontractor/smoke-detection-dataset
+dataset_url: https://www.kaggle.com/code/stpeteishii/smoke-detection-fastai-with-tabularpandas
+raw: smoke_detection_iot.csv
+preprocess: preprocess.csv
+preprocess_without_outlines: preprocess_without_outlines.csv
