@@ -52,10 +52,8 @@ def coverage(session: nox.Session) -> None:
     _deps(session)
     _install_test_dependencies(session)
     session.run("coverage", "erase")
-    session.run(
-        "coverage", "run", "--append", "-m", "pytest", "-m", "not training", "tests", silent=True
-    )
-    session.run("coverage", "report")  # , "--fail-under=100")
+    session.run("coverage", "run", "--append", "-m", "pytest", "-m", "not training")
+    session.run("coverage", "report", "--fail-under=20")  # 100
     session.run("coverage", "erase")
     session.notify("great_expectations")
 

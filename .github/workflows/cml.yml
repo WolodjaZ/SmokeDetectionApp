@@ -1,0 +1,22 @@
+name: cml
+on:
+  pull_request:
+    branches:
+    - master
+    - main
+jobs:
+  run:
+    if: contains(github.head_ref, 'experiment')
+    runs-on: ubuntu-latest
+    container: docker://dvcorg/cml-py3:latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: cml_run
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Your ML workflow goes here
+          echo "## Model metrics" > report.md
+          dvc diff --targets results/performance.json -- HEAD v1 >> report.md
+
+          cml-send-comment report.md
