@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>About Dataset - Smoke Detection App</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "About Dataset";
+        var mkdocs_page_input_path = "src/dataset.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Smoke Detection App
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">workflows</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../main/">main</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">src</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../data/">data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../evaluate/">evaluate</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../predict/">predict</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../train/">train</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../utils/">utils</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Smoke Detection App</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>About Dataset</li>
+    <li class="wy-breadcrumbs-aside">
+        <a href="https://github.com/WolodjaZ/smoke-detection/edit/master/docs/src/dataset.md"
+          class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="about-dataset">About Dataset</h1>
+<h2 id="quick-start-guide">Quick Start Guide</h2>
+<p>Problem Type : Binary Classification
+Target Variable : Fire Alarm</p>
+<h2 id="context">Context</h2>
+<p>A smoke detector is a device that senses smoke, typically as an indicator of fire. Smoke detectors are usually housed in plastic enclosures, typically shaped like a disk about 150 millimetres (6 in) in diameter and 25 millimetres (1 in) thick, but shape and size vary.</p>
+<p>--&gt; Types of Smoke Detectors</p>
+<ol>
+<li>
+<p>Photoelectric Smoke Detector
+A photoelectric smoke detector contains a source of infrared, visible, or ultraviolet light, a lens, and a photoelectric receiver. In some types, the light emitted by the light source passes through the air being tested and reaches the photosensor. The received light intensity will be reduced due to scattering from particles of smoke, air-borne dust, or other substances; the circuitry detects the light intensity and generates an alarm if it is below a specified threshold, potentially due to smoke. Such detectors are also known as optical detectors.</p>
+</li>
+<li>
+<p>Ionization Smoke Detector
+An ionization smoke detector uses a radioisotope to ionize air. If any smoke particles enter the open chamber, some of the ions will attach to the particles and not be available to carry the current in that chamber. An electronic circuit detects that a current difference has developed between the open and sealed chambers, and sounds the alarm</p>
+</li>
+</ol>
+<p><strong>The author of this dataset has successfully created a smoke detection device with the help of IOT devices and AI model. (Check Acknowledgement)</strong></p>
+<h2 id="about-the-dataset">About the dataset</h2>
+<p>Collection of training data is performed with the help of IOT devices since the goal is to develop a AI based smoke detector device.
+Many different environments and fire sources have to be sampled to ensure a good dataset for training. A short list of different scenarios which are captured:</p>
+<ul>
+<li>Normal indoor</li>
+<li>Normal outdoor</li>
+<li>Indoor wood fire, firefighter training area</li>
+<li>Indoor gas fire, firefighter training area</li>
+<li>Outdoor wood, coal, and gas grill</li>
+<li>Outdoor high humidity</li>
+<li>etc.</li>
+</ul>
+<p>The dataset is nearly 60.000 readings long. The sample rate is 1Hz for all sensors. To keep track of the data, a UTC timestamp is added to every sensor reading.</p>
+<h2 id="acknowledgement-credits">Acknowledgement / Credits</h2>
+<p>The data is collected by Stefan Blattmann in his project Real-time Smoke Detection with AI-based Sensor Fusion.
+Author's GitHub : https://github.com/Blatts01</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/WolodjaZ/smoke-detection/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme_extra.js" defer></script>
+    <script src="../../js/theme.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
