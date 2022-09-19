@@ -61,4 +61,5 @@ def dvc(c):
     c.run("dvc add data/smoke_detection_iot.csv")
     c.run("dvc add data/preprocess.csv")
     c.run("dvc add data/preprocess_without_outlines.csv")
+    c.run("dvc add results/performance.json")
     c.run("dvc push")
