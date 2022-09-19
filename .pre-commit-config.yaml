@@ -40,10 +40,16 @@ repos:
         args: [--py36-plus]
 -   repo: local
     hooks:
-        -   id: test
-            name: test
+        -   id: mypy
+            name: mypy
             entry: invoke
-            args: ["test"]
+            args: ["mypy"]
+            language: system
+            pass_filenames: false
+        -   id: cover
+            name: cover
+            entry: invoke
+            args: ["coverage"]
             language: system
             pass_filenames: false
         -   id: clean

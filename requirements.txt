@@ -15,3 +15,4 @@ bentoml==1.0.5
 gradio==3.2
 whylogs==1.0.13
 hydra-core==1.2.0
+hydra-colorlog==1.2.0

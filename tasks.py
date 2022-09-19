@@ -1,5 +1,7 @@
 from invoke import task
 
+CURRENT_PYTHON_VERSION = "3.8"
+
 
 @task
 def help(c):
@@ -9,16 +11,16 @@ def help(c):
     print("  - venv: Create a virtual environment.")
     print("  - clean: Clean all unnecessary files.")
     print("  - style: Style project.")
-    # print("  - docs: Build documentation.")
     print("  - test: Test project.")
+    print("  - coverage: Coverage analysis.")
+    print("  - mypy: Typing analysis.")
     print("  - dvc: Run dvc commands.")
+    # print("  - docs: Build documentation.")
 
 
 @task
-def style(c):
-    c.run("black .")
-    c.run("flake8")
-    c.run("python3 -m isort .")
+def style(c, python_version=CURRENT_PYTHON_VERSION):
+    c.run(f"nox -s lint-{python_version}")
 
 
 @task
@@ -29,8 +31,7 @@ def venv(c):
 
 
 @task
-def clean(c):
-    style(c)
+def clean(c, python_version=CURRENT_PYTHON_VERSION):
     c.run('find . -type f -name "*.DS_Store" -ls -delete')
     c.run(r'find . | grep -E "(__pycache__|\.pyc|\.pyo)" | xargs rm -rf')
     c.run('find . | grep -E ".pytest_cache" | xargs rm -rf')
@@ -41,11 +42,18 @@ def clean(c):
 
 
 @task
-def test(c):
-    c.run('pytest -m "not training" --cov=src --cov-report=term-missing --cov-report=xml')
-    c.run("cd tests && great_expectations checkpoint run raw")
-    c.run("cd tests && great_expectations checkpoint run preprocess")
-    c.run("cd tests && great_expectations checkpoint run preprocess_without_outlines")
+def test(c, python_version=CURRENT_PYTHON_VERSION):
+    c.run(f"nox -s test-{python_version}")
+
+
+@task
+def coverage(c, python_version=CURRENT_PYTHON_VERSION):
+    c.run(f"nox -s coverage-{python_version}")
+
+
+@task
+def mypy(c, python_version=CURRENT_PYTHON_VERSION):
+    c.run(f"nox -s mypy-{python_version}")
 
 
 @task

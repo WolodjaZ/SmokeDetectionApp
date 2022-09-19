@@ -3,7 +3,7 @@ import logging
 import os
 import random
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, Type, Union
 
 import mlflow
 import numpy as np
@@ -12,7 +12,7 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 from rich.logging import RichHandler
 
 from src.config import Path as Path_config
-from src.config import SmokeConfig
+from src.config import SmokeConfig, SmokeConfigOptimize
 
 
 def load_dict(filepath: str) -> Dict:
@@ -29,13 +29,15 @@ def load_dict(filepath: str) -> Dict:
     return d
 
 
-def save_dict(d: Dict, filepath: str, cls: Optional[Dict] = None, sort_keys: bool = False) -> None:
+def save_dict(
+    d: Dict, filepath: str, cls: Optional[Type[json.JSONEncoder]] = None, sort_keys: bool = False
+) -> None:
     """Save a dictionary to a specific location.
 
     Args:
         d (Dict): Data in dictionary to be saved as json.
         filepath (str): Path where the json will be saved.
-        cls (Optional[Dict], optional): Method to serialize additional types. Defaults to None.
+        cls (Optional[Type[json.JSONEncoder]], optional): Class to be used to encode the data. Defaults to None.
         sort_keys (bool, optional): Sort dictionary by keys. Defaults to False.
     """
     with open(filepath, "w") as fp:
@@ -92,18 +94,18 @@ def get_logger(config_path: str) -> logging.Logger:
     Returns:
         logging.Logger: Logger object.
     """
-    logging.config.fileConfig(Path(config_path, "logging.config"))
+    logging.config.fileConfig(Path(config_path, "logging.config"))  # type: ignore
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
     logger.handlers[0] = RichHandler(markup=True)  # set rich handler
     return logger
 
 
-def download_data(cfg: SmokeConfig, logger: logging.Logger) -> None:
+def download_data(cfg: Union[SmokeConfig, SmokeConfigOptimize], logger: logging.Logger) -> None:
     """load data from kaggle.
 
     Args:
-        cfg (SmokeConfig): Smoke config.
+        cfg (Union[SmokeConfig, SmokeConfigOptimize]): Smoke config.
         logger (logging.Logger): Logger.
     """
     # Download data

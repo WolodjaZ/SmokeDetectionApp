@@ -9,7 +9,7 @@ with open(Path(BASE_DIR, "requirements.txt")) as file:
     required_packages = [ln.strip() for ln in file.readlines()]
 
 # Define build requirements
-build_packages = ["pre-commit==2.20.0", "invoke==1.7.1"]
+build_packages = ["pre-commit==2.20.0", "invoke==1.7.1", "nox==2022.8.7"]
 
 # Define docs requirements
 docs_packages = ["mkdocs==1.3.1", "mkdocstrings==0.19.0"]
@@ -24,6 +24,8 @@ test_packages = [
     "pytest-mock==3.8.2",
     "great-expectations==0.15.20",
     "pretty_errors==1.2.25",
+    "mypy==0.971",
+    "types-requests==2.28.10",
 ]
 
 # Define our package
@@ -40,5 +42,6 @@ setup(
         "dev": docs_packages + style_packages + test_packages + build_packages,
         "docs": docs_packages,
         "test": test_packages,
+        "style": style_packages,
     },
 )
