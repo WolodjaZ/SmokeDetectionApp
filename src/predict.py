@@ -76,9 +76,9 @@ def load_artifacts(cfg: SmokeConfig) -> dict:
     )
 
     # Load objects from run
-    args = Namespace(**utils.load_dict(filepath=(artifacts_dir / Path("args.json"))))
+    args = Namespace(**utils.load_dict(filepath=str(artifacts_dir / Path("args.json"))))
     model = joblib.load(Path(artifacts_dir, "model.pkl"))
-    performance = utils.load_dict(filepath=Path(artifacts_dir / Path("performance.json")))
+    performance = utils.load_dict(filepath=str(Path(artifacts_dir / Path("performance.json"))))
 
     return {
         "args": args,

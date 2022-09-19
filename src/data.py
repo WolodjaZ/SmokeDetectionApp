@@ -1,6 +1,6 @@
 # src/data.py
 import os
-from typing import Tuple
+from typing import Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -8,7 +8,7 @@ from dataprep.clean import clean_df
 from imblearn.over_sampling import RandomOverSampler
 from sklearn.model_selection import train_test_split
 
-from src.config import SmokeConfig
+from src.config import SmokeConfig, SmokeConfigOptimize
 
 
 def get_outliers(df: pd.DataFrame) -> pd.Series:
@@ -30,7 +30,9 @@ def get_outliers(df: pd.DataFrame) -> pd.Series:
     return outlines
 
 
-def cleaning(df: pd.DataFrame, cfg: SmokeConfig) -> Tuple[pd.DataFrame, pd.DataFrame]:
+def cleaning(
+    df: pd.DataFrame, cfg: Union[SmokeConfig, SmokeConfigOptimize]
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Cleaning the data.
 
     Args:
@@ -97,7 +99,7 @@ def get_data_splits(
     return X_train, X_val, X_test, y_train, y_val, y_test
 
 
-def preprocess(df: pd.DataFrame, cfg: SmokeConfig) -> Tuple:
+def preprocess(df: pd.DataFrame, cfg: Union[SmokeConfig, SmokeConfigOptimize]) -> Tuple:
     """Preprocess the data.
 
     Args:

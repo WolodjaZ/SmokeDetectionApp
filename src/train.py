@@ -4,7 +4,7 @@ import os
 import tempfile
 import warnings
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Union
 
 import bentoml
 import hydra
@@ -22,7 +22,7 @@ from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 
 from src import data, evaluate, predict, utils
-from src.config import SmokeConfig
+from src.config import SmokeConfig, SmokeConfigOptimize
 
 cs = ConfigStore.instance()
 cs.store(name="smoke_train", node=SmokeConfig)
@@ -66,10 +66,12 @@ def train_smoke(cfg: SmokeConfig):
         # Log artifacts
         with tempfile.TemporaryDirectory() as dp:
             utils.save_dict(
-                OmegaConf.to_container(artifacts["args"]), Path(dp, "args.json"), cls=NumpyEncoder
+                OmegaConf.to_container(artifacts["args"]),
+                str(Path(dp, "args.json")),
+                cls=NumpyEncoder,
             )
             joblib.dump(artifacts["model"], Path(dp, "model.pkl"))
-            utils.save_dict(performance, Path(dp, "performance.json"))
+            utils.save_dict(performance, str(Path(dp, "performance.json")))
             mlflow.log_artifacts(dp)
 
     # Save to config
@@ -97,7 +99,10 @@ def train_smoke(cfg: SmokeConfig):
 
 
 def train(
-    cfg: SmokeConfig, df: pd.DataFrame, logger: logging.Logger, optimize: bool = False
+    cfg: Union[SmokeConfig, SmokeConfigOptimize],
+    df: pd.DataFrame,
+    logger: logging.Logger,
+    optimize: bool = False,
 ) -> Dict:
     """Train model on data.
 
