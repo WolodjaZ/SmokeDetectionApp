@@ -5,9 +5,9 @@ shuffle: true
 subset: null
 use_outlines: false
 num_epochs: 1
-threshold: 0.9940672544464014
+threshold: 0.994067843627874
 oversample: true
 seed: 123
-outliers_numb: 10
+outliers_numb: 6
 hyperparams:
-    var_smoothing: 1.06471030620842e-06
+    var_smoothing: 1e-08

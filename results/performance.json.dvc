@@ -1,4 +1,4 @@
 outs:
-- md5: 5e61856e52e74fd900bfe154968098b6
-  size: 141
+- md5: c4978cff1f8183e8682fba79f7466769
+  size: 140
   path: performance.json
